@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex; flex-direction: row" :class="expanded ? 'text-container-freed' : 'text-container'">
     <div><b v-if="isOverflowing" v-on:click="toggle" class="hoverclick">+</b></div>
-    <div style="margin-left: .2em;">{{(expanded && isOverflowing) ? value : value.slice(0, 1000)}}</div>
+    <div class="str" style="margin-left: .2em;">{{(expanded && isOverflowing) ? value : value.slice(0, 1000)}}</div>
   </div>
 </template>
 
@@ -67,5 +67,10 @@
 
   .hoverclick {
     cursor: pointer;
+  }
+
+  .str {
+    font-family: "Lucida Console", Monaco, monospace;
+    color: green;
   }
 </style>

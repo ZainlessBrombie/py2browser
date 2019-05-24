@@ -12,6 +12,8 @@ import os
 builtin_names = {'__name__', '__main__', '__doc__', '__package__', '__loader__', '__spec__', '__annotations__', '__builtins__', '__cached__', '__file__'}
 
 stuff = "test123sjdbjhvdbfjhvdjvhsjhffff ffffffffffffffffffffffff ffffffffffffffffffvtes t123sjdbjhvdbfjhvdjvhsjhfffffffffffffffffffff fffffffffffffffffffffffffvtest123s jdbjhvdbfjhvdjvhsjhffffffffffffffff ffffffffffffffffffffffffffffffv test123sjdbjhvdbfjhvdjvhsjhfffffffffffffff fffffffffffffffffffffffffffffffvtest123sjdbjhvdbfjhvdjvhsjh ffffffffffffffffffffffffffffffffffffffffffffffv"
+array_example = [1, [2, [3, [4, [5, [6, [7]]]]]]]
+date_test = datetime.datetime(2019, 2, 3, 1, 12, 32, 123)
 
 
 def test():
@@ -56,7 +58,7 @@ def _to_json(value):
     if type(value) is type:
         return {'type': 'type', 'data': {'value': str(value)[slice(len('<class \''), -len('\'>'))]}}
     if str(type(value)) == '<class \'function\'>':
-        return {'type': 'function', 'data': {'to_string': str(value), 'module': str(value.__module__), 'filename': str(value.__code__.co_filename), 'arg_count': str(value.__code__.co_argcount)}}
+        return {'type': 'function', 'data': {'to_string': str(value), 'module': str(value.__module__), 'filename': str(value.__code__.co_filename), 'arg_count': int(value.__code__.co_argcount)}}
     if type(value) is datetime.date:
         return {'type': 'datetime', 'data': {'value': value.isoformat(), 'zoned': False, 'subtype': 'date'}}
     if type(value) is datetime.time:

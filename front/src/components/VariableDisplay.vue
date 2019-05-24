@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <div v-if="showing" class="container">
-      <component :is="typeMap[showing.type] && typeMap[showing.type].component || Empty"
-                 v-bind="typeMap[showing.type] ? typeMap[showing.type].props(showing) : {}"></component>
+      <component :is="TypeRegistry.obtain(showing, path).component"
+                 v-bind="TypeRegistry.obtain(showing, path).props(showing)" v-on:select="evt => $emit('select', evt)"></component>
     </div>
   </div>
 </template>
 
 <script>
-  import StringDisplay from "./typecomponents/StringDisplay";
   import Empty from "./typecomponents/Empty";
+  import TypeRegistry from "./typecomponents/TypeRegistry";
 
   export default {
     name: "VariableDisplay",
@@ -20,15 +20,13 @@
       showing: {
         type: Object,
         default: undefined,
+      },
+      path: {
+        type: Array,
       }
     },
     data: () => ({
-      typeMap: {
-        string: {
-          component: StringDisplay,
-          props: (stringVar) => stringVar ? ({value: stringVar.data.value}) : {value: '' /* wont be rendered */}
-        },
-      },
+      TypeRegistry,
       Empty,
     })
   }

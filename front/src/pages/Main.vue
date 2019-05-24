@@ -1,8 +1,8 @@
 <template>
   <div style="display: flex; flex-direction: row">
-    <SidebarLeft class="sidebar" v-on:varSelected="varName => select(varName)"
+    <SidebarLeft class="sidebar" v-on:varSelected="varName => select([varName])"
                  :vars="variables"></SidebarLeft>
-    <VariableDisplay class="var-display" :showing="selected"></VariableDisplay>
+    <VariableDisplay class="var-display" :showing="selectionMethod(path, variables)" :path="path" v-on:select="select"></VariableDisplay>
   </div>
 </template>
 
@@ -10,6 +10,7 @@
   import SidebarLeft from '../components/SidebarLeft';
   import VariableDisplay from "../components/VariableDisplay";
   import axios from "axios";
+  import util from "../utils/util";
 
 
   export default {
@@ -17,10 +18,9 @@
     data: () => ({
       error: '',
       variables: {},
-      selected: undefined,
       updating: false,
       updateSuppressed: false,
-      selectedName: undefined,
+      path: [],
     }),
     methods: {
       update() {
@@ -30,7 +30,6 @@
           .then(({data}) => {
             this.error = '';
             this.variables = data.vars;
-            this.selected = this.variables[this.selectedName];
           })
           .catch(err => {
             this.error = `Could not load, data stale: ${err}`
@@ -39,9 +38,22 @@
             this.updating = false;
           })
       },
-      select(varName) {
-        this.selectedName = varName;
-        this.selected = this.variables[varName];
+      selectionMethod(path, variables) {
+        if (!path || !path.length || !variables) return undefined;
+
+        return path.slice(1).reduce((cur, p) => {
+          if (!cur) return undefined;
+          if (cur.type === 'collection') {
+            return typeof p === 'number' && cur.data.value[p];
+          }
+          if (cur.type === 'map') {
+            return (cur.data.value.filter(({key}) => util.deepEquals(key, p))[0] || {}).value
+          }
+          return undefined;
+        }, variables[path[0]])
+      },
+      select(path) {
+        this.path = path;
       }
     },
     mounted() {
@@ -61,6 +73,7 @@
     width: 85vw;
     height: 100vh;
     background: #42b983;
+    overflow-y: auto;
   }
 
   .sidebar {
