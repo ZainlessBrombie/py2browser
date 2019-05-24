@@ -1,6 +1,7 @@
 <template>
-  <div :class="expanded ? 'text-container-freed' : 'text-container'">
-    <b v-if="isOverflowing" v-on:click="toggle">+</b>{{(expanded && isOverflowing) ? value : value.slice(0, 1000)}}
+  <div style="display: flex; flex-direction: row" :class="expanded ? 'text-container-freed' : 'text-container'">
+    <div><b v-if="isOverflowing" v-on:click="toggle" class="hoverclick">+</b></div>
+    <div style="margin-left: .2em;">{{(expanded && isOverflowing) ? value : value.slice(0, 1000)}}</div>
   </div>
 </template>
 
@@ -53,10 +54,18 @@
     padding: 7px;
     width: 90%;
     white-space: nowrap;
+    border-radius: 5px;
+    border: solid dimgrey;
   }
 
   .text-container-freed {
     height: unset;
     padding: 7px;
+    border-radius: 5px;
+    border: solid dimgrey;
+  }
+
+  .hoverclick {
+    cursor: pointer;
   }
 </style>
