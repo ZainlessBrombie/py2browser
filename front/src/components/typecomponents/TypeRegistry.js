@@ -5,6 +5,7 @@ import ArrayDisplay from "./ArrayDisplay";
 import UnknownDisplay from "./UnknownDisplay";
 import DatetimeDisplay from "./DatetimeDisplay";
 import FunctionDisplay from "./FunctionDisplay";
+import BytesDisplay from "./BytesDisplay";
 
 export default {
     obtain(v, path) {
@@ -46,6 +47,10 @@ export default {
         type: {
             component: PlainDisplay,
             props: (typeVar) => typeVar ? {value: 'Module: ' + typeVar.data.value, color: 'black'} : {value: 'MISSING'}
+        },
+        bytes: {
+            component: BytesDisplay,
+            props: (bytesVar) => bytesVar ? {value: bytesVar.data.value, len: bytesVar.data.len} : {},
         }
     }
 }

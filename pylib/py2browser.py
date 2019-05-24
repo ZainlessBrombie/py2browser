@@ -1,3 +1,4 @@
+import base64
 import datetime
 import json
 import socket
@@ -13,7 +14,7 @@ builtin_names = {'__name__', '__main__', '__doc__', '__package__', '__loader__',
 
 stuff = "test123sjdbjhvdbfjhvdjvhsjhffff ffffffffffffffffffffffff ffffffffffffffffffvtes t123sjdbjhvdbfjhvdjvhsjhfffffffffffffffffffff fffffffffffffffffffffffffvtest123s jdbjhvdbfjhvdjvhsjhffffffffffffffff ffffffffffffffffffffffffffffffv test123sjdbjhvdbfjhvdjvhsjhfffffffffffffff fffffffffffffffffffffffffffffffvtest123sjdbjhvdbfjhvdjvhsjh ffffffffffffffffffffffffffffffffffffffffffffffv"
 array_example = [1, [2, [3, [4, [5, [6, [7]]]]]]]
-date_test = datetime.datetime(2019, 2, 3, 1, 12, 32, 123)
+byte_test = b'abckgsnjn'
 
 
 def test():
@@ -67,6 +68,8 @@ def _to_json(value):
         return {'type': 'datetime', 'data': {'value': value.isoformat(), 'zoned': False, 'subtype': 'datetime'}}
     if str(type(value)) == '<class \'module\'>':
         return {'type': 'module', 'data': {'to_string': str(value), 'name': value.__name__}}
+    if type(value) is bytes:
+        return {'type': 'bytes', 'data': {'value': base64.b64encode(value).decode('utf-8'), 'len': len(value)}}
 
     return {'type': 'unsupported', 'data': {'type': str(type(value)), 'to_string': str(value)}}
 
