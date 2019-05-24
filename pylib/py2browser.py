@@ -48,7 +48,7 @@ def _to_json(value):
     if type(value) is type:
         return {'type': 'type', 'data': {'value': str(value)[slice(len('<class \''), -len('\'>'))]}}
     if str(type(value)) == '<class \'function\'>':
-        return {'type': 'function', 'data': {'to_string': str(value), 'module': str(value.__module__), 'filename': str(value.__code__.co_filename)}}
+        return {'type': 'function', 'data': {'to_string': str(value), 'module': str(value.__module__), 'filename': str(value.__code__.co_filename), 'arg_count': str(value.__code__.co_argcount)}}
     if type(value) is datetime.date:
         return {'type': 'datetime', 'data': {'value': value.isoformat(), 'zoned': False, 'subtype': 'date'}}
     if type(value) is datetime.time:
