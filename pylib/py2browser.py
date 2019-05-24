@@ -1,6 +1,7 @@
 import datetime
 import json
 import socket
+import threading
 from collections import OrderedDict
 from decimal import Decimal
 import http.server as server_class
@@ -9,6 +10,8 @@ import os
 
 
 builtin_names = {'__name__', '__main__', '__doc__', '__package__', '__loader__', '__spec__', '__annotations__', '__builtins__', '__cached__', '__file__'}
+
+stuff = "test123sjdbjhvdbfjhvdjvhsjhffff ffffffffffffffffffffffff ffffffffffffffffffvtes t123sjdbjhvdbfjhvdjvhsjhfffffffffffffffffffff fffffffffffffffffffffffffvtest123s jdbjhvdbfjhvdjvhsjhffffffffffffffff ffffffffffffffffffffffffffffffv test123sjdbjhvdbfjhvdjvhsjhfffffffffffffff fffffffffffffffffffffffffffffffvtest123sjdbjhvdbfjhvdjvhsjh ffffffffffffffffffffffffffffffffffffffffffffffv"
 
 
 def test():
@@ -19,8 +22,13 @@ def test():
 
 
 def mirror(scope):
-    local_server = server_class.HTTPServer(('localhost', 8081), instance_for(scope))
-    local_server.serve_forever(0.1)
+    def run():
+        local_server = server_class.HTTPServer(('localhost', 8081), instance_for(scope))
+        print('Serving on http://localhost:8081')
+        local_server.serve_forever(0.1)
+    thread = threading.Thread(target=run)
+    # thread.setDaemon(True)
+    thread.start()
     pass
 
 
@@ -92,6 +100,13 @@ def instance_for(scope):
         def _get_data(self):
             content_length = int(self.headers['Content-Length'])
             return self.rfile.read(content_length)
+
+        def do_OPTIONS(self):
+            if self._verify_local():
+                return
+            self._header('allow', 'OPTIONS, GET, POST')
+            self._header('Access-Control-Allow-Headers', 'Content-Type, Content-Length')
+            self._finish(200, '')
 
         def do_GET(self):
             if self._verify_local():
