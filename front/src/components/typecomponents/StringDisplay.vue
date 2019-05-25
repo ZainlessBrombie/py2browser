@@ -61,6 +61,7 @@
   .text-container-freed {
     height: unset;
     padding: 7px;
+    width: 90%;
     border-radius: 5px;
     border: solid dimgrey;
   }

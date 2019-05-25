@@ -1,11 +1,12 @@
 <template>
     <div class="wrapper">
-        Stream/IO. (e.g. to a file)
+        <b>Stream/IO. (e.g. to a file)</b>
         <CustomTable
                 :columns="['name', 'mode', 'encoding', 'closed']"
                 :headings="{name: 'Name', mode: 'Mode', encoding: 'Encoding', closed: 'Closed'}"
                 :rows="[{name, mode, encoding, closed}]"
-                :forceEqualLength="true">
+                :forceEqualLength="true"
+                class="mt">
         </CustomTable>
     </div>
 </template>
@@ -44,4 +45,7 @@
         flex-grow: 1;
     }
 
+    .mt {
+        margin-top: 5px;
+    }
 </style>
