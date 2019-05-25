@@ -15,9 +15,10 @@
             <tbody class="w100">
             <tr v-for="(row, rowIndex) in currentRows" class="t-row">
                 <td v-for="(col, colIndex) in columns"
-                    :style="{'flex-grow': 1, 'background-color': !!(rowIndex % 2) ^ !!(colIndex % 2) ? lightBg : darkBg}"
+                    :style="obtainEntryStyle(rowIndex, colIndex)"
                     class="t-field">
-                    <slot :name="col" v-bind="{column: col, row: row, index: rowIndex}"></slot>
+                    <slot v-if="$scopedSlots[col]" :name="col" v-bind="{column: col, row: row, index: rowIndex}"></slot>
+                    <i v-else style="font-style: normal; color: black;">{{row[col]}}</i>
                 </td>
             </tr>
             </tbody>
@@ -56,6 +57,10 @@
             darkBg: {
                 type: String,
                 default: '#d3d3d3'
+            },
+            forceEqualLength: {
+                type: Boolean,
+                default: false,
             }
         },
         data() {
@@ -75,6 +80,13 @@
             }
         },
         methods: {
+            obtainEntryStyle(rowIndex, colIndex) {
+                return {
+                    'flex-grow': 1,
+                    'background-color': !!(rowIndex % 2) ^ !!(colIndex % 2) ? this.lightBg : this.darkBg,
+                    ...(this.forceEqualLength ? {'width': `${100 / this.columns.length}%`} : {})
+                };
+            },
             setSearch(str) {
                 this.desiredSearch = str;
             },

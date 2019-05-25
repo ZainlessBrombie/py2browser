@@ -16,6 +16,7 @@ stuff = "test123sjdbjhvdbfjhvdjvhsjhffff ffffffffffffffffffffffff ffffffffffffff
 array_example = [1, [2, [3, [4, [5, [6, [7]]]]]]]
 byte_test = b'abckgsnjn'
 multilist_tets = [{'other': [], 'working': {'testvalue': {'still': 'ok', 'this': {'is': 'not', 'wait': {'what': '?'}}}}, 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'}]
+f = open('/home/mathis/examples.desktop')
 
 
 def test():
@@ -79,6 +80,9 @@ def _to_json(value, visited=None):
         return {'type': 'module', 'data': {'to_string': str(value), 'name': value.__name__}}
     if type(value) is bytes:
         return {'type': 'bytes', 'data': {'value': base64.b64encode(value).decode('utf-8'), 'len': len(value)}}
+    import _io
+    if type(value) is _io.TextIOWrapper:
+        return {'type': 'stream', 'data': {'name': value.name, 'mode': value.mode, 'encoding': value.encoding, 'closed': value.closed}}
 
     return {'type': 'unsupported', 'data': {'type': str(type(value)), 'to_string': str(value)}}
 

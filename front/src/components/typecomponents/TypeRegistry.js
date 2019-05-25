@@ -8,6 +8,7 @@ import FunctionDisplay from "./FunctionDisplay";
 import BytesDisplay from "./BytesDisplay";
 import MapDisplay from "./MapDisplay";
 import RecursionDisplay from "./RecursionDisplay";
+import StreamDisplay from "./StreamDisplay";
 
 export default {
     obtain(v, path) {
@@ -61,6 +62,10 @@ export default {
         recursion: {
             component: RecursionDisplay,
             props: (recVar) => recVar ? {depth: recVar.data.value} : {}
+        },
+        stream: {
+            component: StreamDisplay,
+            props: (streamVar) => streamVar ? {name: streamVar.data.name, mode: streamVar.data.mode, encoding: streamVar.data.encoding, closed: streamVar.data.closed} : {}
         }
     }
 }
