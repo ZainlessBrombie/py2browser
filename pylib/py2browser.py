@@ -16,6 +16,8 @@ stuff = "test123sjdbjhvdbfjhvdjvhsjhffff ffffffffffffffffffffffff ffffffffffffff
 array_example = [1, [2, [3, [4, [5, [6, [7]]]]]]]
 byte_test = b'abckgsnjn'
 multilist_tets = [{'jkdkgfb': {'testvalue': {'still': 'ok', 'this': {'is': 'not', 'wait': {'what': '?'}}}}, 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'}]
+recursion = {'a': {'b': {}}}
+recursion['a']['b'] = recursion['a']
 
 
 def test():
@@ -37,13 +39,13 @@ def mirror(scope):
 
 
 def _to_json(value, visited=None):
-    #if visited is None:
-    #    visited = [] todo uncomment
-    #else:
-    #    visited = [*visited]
-    #if id(value) in visited:
-    #    return {'type': 'recursion', 'data': {'value': -(len(visited) - visited.index(id(value)))}}
-    #visited.append(id(value))
+    if visited is None:
+        visited = []
+    else:
+        visited = [*visited]
+    if id(value) in visited:
+        return {'type': 'recursion', 'data': {'value': -(len(visited) - visited.index(id(value)))}}
+    visited.append(id(value))
     if type(value) is str:
         return {'type': 'string', 'data': {'value': value}}
     if type(value) is int or type(value) is float:

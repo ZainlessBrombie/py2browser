@@ -48,7 +48,7 @@
           }
           if (cur.type === 'map') { // TODO (tuple). Also: Files
             return typeof p[0] === "number" && cur.data.value[p[0]][p[1]] || undefined;
-          }
+          } // TODO dynamic content field
           return undefined;
         }, variables[path[0]]);
       },

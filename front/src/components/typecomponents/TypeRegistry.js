@@ -7,6 +7,7 @@ import DatetimeDisplay from "./DatetimeDisplay";
 import FunctionDisplay from "./FunctionDisplay";
 import BytesDisplay from "./BytesDisplay";
 import MapDisplay from "./MapDisplay";
+import RecursionDisplay from "./RecursionDisplay";
 
 export default {
     obtain(v, path) {
@@ -56,6 +57,10 @@ export default {
         map: {
             component: MapDisplay,
             props: (mapVar) => mapVar ? {value: mapVar.data.value, subtype: mapVar.data.subtype} : {}
+        },
+        recursion: {
+            component: RecursionDisplay,
+            props: (recVar) => recVar ? {depth: recVar.data.value} : {}
         }
     }
 }
