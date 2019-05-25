@@ -21,6 +21,7 @@
       updateSuppressed: false,
       path: [],
       subjectivePath: [],
+      currentHash: 'none',
     }),
     methods: {
       update() {
@@ -29,7 +30,11 @@
         axios.get(`${false ? window.location.origin : 'http://localhost:8081'}/api/v1/variables`, {timeout: 20000})
           .then(({data}) => {
             this.error = '';
-            this.variables = data.vars;
+            // save performance
+            if (data.hash !== this.currentHash) {
+              this.variables = data.vars;
+              this.currentHash = data.hash;
+            }
           })
           .catch(err => {
             this.error = `Could not load, data stale: ${err}`
@@ -53,6 +58,8 @@
           // TODO grey out modules and functions
           // TODO option to hide components
           // TODO pickle
+          // TODO empty
+          // TODO error message
           return undefined;
         }, variables[path[0]]);
       },

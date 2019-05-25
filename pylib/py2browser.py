@@ -1,5 +1,6 @@
 import base64
 import datetime
+import hashlib
 import json
 import socket
 import threading
@@ -59,7 +60,7 @@ def _to_json(value, visited=None):
     if type(value) is bool:
         return {'type': 'boolean', 'data': {'value': str(value)}}
     if type(value) is dict or type(value) is OrderedDict:
-        append = [] # TODO hashing
+        append = []
         for key in value:
             append.append({
                 'key': _to_json(key, visited),
@@ -134,7 +135,7 @@ def instance_for(scope):
                 for var in scope:
                     if var not in builtin_names:
                         ret[var] = _to_json(scope[var])
-                self._finish(200, json.dumps({'vars': ret}))
+                self._finish(200, json.dumps({'vars': ret, 'hash': hashlib.md5(json.dumps(ret).encode('utf-8')).hexdigest()}))
                 return
             if self.path.startswith('/api'):
                 self._finish(404, '{"message": "That path could not be found"}')
