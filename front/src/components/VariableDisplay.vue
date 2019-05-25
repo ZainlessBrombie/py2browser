@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div v-if="showing" class="container">
+    <div class="container">
       <component :is="TypeRegistry.obtain(showing, path).component"
                  v-bind="TypeRegistry.obtain(showing, path).props(showing)" v-on:select="evt => $emit('select', evt)"></component>
     </div>

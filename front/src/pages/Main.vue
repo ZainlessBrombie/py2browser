@@ -51,7 +51,7 @@
           if (cur.type === 'collection') {
             return typeof p === 'number' && cur.data.value[p] || undefined;
           }
-          if (cur.type === 'map') { // TODO Also: Files
+          if (cur.type === 'map') {
             return typeof p[0] === "number" && cur.data.value[p[0]][p[1]] || undefined;
           } // TODO dynamic/adjustable content field
           // TODO search recursively
