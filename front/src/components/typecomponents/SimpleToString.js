@@ -5,7 +5,7 @@ const eligible = (v) => {
 };
 
 const toSimpleString = (v) => {
-    if (v.type === 'string') {
+    if (v.type === 'string' && v.data.value.length < 80) {
         return {
             value: JSON.stringify(v.data.value),
             style: {

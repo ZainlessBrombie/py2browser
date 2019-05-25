@@ -15,6 +15,7 @@ builtin_names = {'__name__', '__main__', '__doc__', '__package__', '__loader__',
 stuff = "test123sjdbjhvdbfjhvdjvhsjhffff ffffffffffffffffffffffff ffffffffffffffffffvtes t123sjdbjhvdbfjhvdjvhsjhfffffffffffffffffffff fffffffffffffffffffffffffvtest123s jdbjhvdbfjhvdjvhsjhffffffffffffffff ffffffffffffffffffffffffffffffv test123sjdbjhvdbfjhvdjvhsjhfffffffffffffff fffffffffffffffffffffffffffffffvtest123sjdbjhvdbfjhvdjvhsjh ffffffffffffffffffffffffffffffffffffffffffffffv"
 array_example = [1, [2, [3, [4, [5, [6, [7]]]]]]]
 byte_test = b'abckgsnjn'
+multilist_tets = [{'jkdkgfb': {'testvalue': {'still': 'ok', 'this': {'is': 'not', 'wait': {'what': '?'}}}}, 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'}]
 
 
 def test():
@@ -35,13 +36,20 @@ def mirror(scope):
     pass
 
 
-def _to_json(value):
+def _to_json(value, visited=None):
+    #if visited is None:
+    #    visited = [] todo uncomment
+    #else:
+    #    visited = [*visited]
+    #if id(value) in visited:
+    #    return {'type': 'recursion', 'data': {'value': -(len(visited) - visited.index(id(value)))}}
+    #visited.append(id(value))
     if type(value) is str:
         return {'type': 'string', 'data': {'value': value}}
     if type(value) is int or type(value) is float:
         return {'type': 'number', 'data': {'value': str(value), 'subtype': ('int' if (type(value) is int) else 'float')}}
     if type(value) is list or type(value) is set:
-        return {'type': 'collection', 'data': {'subtype': ('list' if (type(value) is list) else 'set'), 'value': list(map(lambda entry: _to_json(entry), list(value)))}}
+        return {'type': 'collection', 'data': {'subtype': ('list' if (type(value) is list) else 'set'), 'value': list(map(lambda entry: _to_json(entry, visited), list(value)))}}
     if type(value) is Decimal:
         return {'type': 'number', 'data': {'value': str(value), 'subtype': 'decimal'}}
     if value is None:
@@ -49,11 +57,11 @@ def _to_json(value):
     if type(value) is bool:
         return {'type': 'boolean', 'data': {'value': str(value)}}
     if type(value) is dict or type(value) is OrderedDict:
-        append = []
+        append = [] # TODO tuple, recusion, hashing
         for key in value:
             append.append({
-                'key': _to_json(key),
-                'value': _to_json(value[key])
+                'key': _to_json(key, visited),
+                'value': _to_json(value[key], visited)
             })
         return {'type': 'map', 'data': {'subtype': ('dict' if (type(value) is dict) else 'ordered_dict'), 'value': append}}
     if type(value) is type:

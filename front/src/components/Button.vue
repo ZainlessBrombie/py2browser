@@ -20,10 +20,9 @@
 .button{
   padding-top: 1.2em;
   text-align: center;
-  margin-top: 15px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 15px 20px;
   height: 2.5em;
-  background: aquamarine;
+  background: white;
+  border: solid black;
 }
 </style>

@@ -6,6 +6,7 @@ import UnknownDisplay from "./UnknownDisplay";
 import DatetimeDisplay from "./DatetimeDisplay";
 import FunctionDisplay from "./FunctionDisplay";
 import BytesDisplay from "./BytesDisplay";
+import MapDisplay from "./MapDisplay";
 
 export default {
     obtain(v, path) {
@@ -51,6 +52,10 @@ export default {
         bytes: {
             component: BytesDisplay,
             props: (bytesVar) => bytesVar ? {value: bytesVar.data.value, len: bytesVar.data.len} : {},
+        },
+        map: {
+            component: MapDisplay,
+            props: (mapVar) => mapVar ? {value: mapVar.data.value, subtype: mapVar.data.subtype} : {}
         }
     }
 }

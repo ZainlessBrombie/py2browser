@@ -1,16 +1,16 @@
 <template>
     <div class="wrapper">
-        <b>{{subtypeStringMapping[subtype] || 'Collection'}} <{{determineType(value).join(', ')}}></b>
+        <b>{{subtypeStringMapping[subtype] || 'Collection'}} {{`<${determineType(value).join(', ')}>`}}</b>
         <div class="entry" v-for="(entry, index) in value.slice(0,show)">
             <div style="font-family: 'Lucida Console', Monaco, monospace">&nbsp;{{index}}:&nbsp;</div>
             <div v-if="SimpleToString.eligible(entry)" :style="SimpleToString.toSimpleString(entry).style">
                 {{SimpleToString.toSimpleString(entry).value}}
             </div>
-            <component v-on:select="evt => $emit('select', evt)" v-else-if="path.length < 6" :is="TypeRegistry.obtain(entry, [...path, index]).component" v-bind="TypeRegistry.obtain(entry, [...path, index]).props(entry)"></component>
-            <div v-else><i>Hidden.</i>&nbsp;<i style="text-decoration: underline; color: blue; cursor: pointer" v-on:click="() => display(index)">Jump</i></div>
+            <component v-on:select="evt => $emit('select', evt)" v-else-if="path.length < 5" :is="TypeRegistry.obtain(entry, [...path, index]).component" v-bind="TypeRegistry.obtain(entry, [...path, index]).props(entry)"></component>
+            <div v-else><i>Hidden.</i>&nbsp;<i style="text-decoration: none; color: blue; cursor: pointer" v-on:click="() => display(index)">Jump</i></div>
         </div>
         <p v-on:click="expand" v-if="show < value.length"><i>&nbsp;&nbsp;More...</i></p>
-    </div>
+    </div> <!-- TODO numbers should have prepended zeroes or whitespaces for consistent spacing -->
 </template>
 
 <script>
@@ -67,5 +67,7 @@
     .entry {
         display: flex;
         flex-direction: row;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 </style>

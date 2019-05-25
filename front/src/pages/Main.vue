@@ -1,8 +1,8 @@
 <template>
   <div style="display: flex; flex-direction: row">
-    <SidebarLeft class="sidebar" v-on:varSelected="varName => select([varName])"
+    <SidebarLeft class="sidebar" v-on:varSelected="varName => selectGlobal([varName])"
                  :vars="variables"></SidebarLeft>
-    <VariableDisplay class="var-display" :showing="selectionMethod(path, variables)" :path="path" v-on:select="select"></VariableDisplay>
+    <VariableDisplay class="var-display" :showing="selectionMethod(path, variables)" :path="[]" v-on:select="selectSubjectively"></VariableDisplay>
   </div>
 </template>
 
@@ -10,7 +10,6 @@
   import SidebarLeft from '../components/SidebarLeft';
   import VariableDisplay from "../components/VariableDisplay";
   import axios from "axios";
-  import util from "../utils/util";
 
 
   export default {
@@ -21,6 +20,7 @@
       updating: false,
       updateSuppressed: false,
       path: [],
+      subjectivePath: [],
     }),
     methods: {
       update() {
@@ -44,16 +44,20 @@
         return path.slice(1).reduce((cur, p) => {
           if (!cur) return undefined;
           if (cur.type === 'collection') {
-            return typeof p === 'number' && cur.data.value[p];
+            return typeof p === 'number' && cur.data.value[p] || undefined;
           }
-          if (cur.type === 'map') {
-            return (cur.data.value.filter(({key}) => util.deepEquals(key, p))[0] || {}).value
+          if (cur.type === 'map') { // TODO (tuple). Also: Files
+            return typeof p[0] === "number" && cur.data.value[p[0]][p[1]] || undefined;
           }
           return undefined;
-        }, variables[path[0]])
+        }, variables[path[0]]);
       },
-      select(path) {
+      selectGlobal(path) {
         this.path = path;
+        this.subjectivePath = path;
+      },
+      selectSubjectively(path) {
+        this.path = [...this.path, ...path];
       }
     },
     mounted() {
@@ -72,7 +76,7 @@
   .var-display {
     width: 85vw;
     height: 100vh;
-    background: #42b983;
+    background: #fdfdff;
     overflow-y: auto;
   }
 
