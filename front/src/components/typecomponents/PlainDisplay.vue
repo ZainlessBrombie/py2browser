@@ -1,12 +1,14 @@
 <template>
     <div class="wrapper">
+        <b v-if="heading">{{heading}}</b>
+        <br>
         &nbsp;<i class="code" :style="{color}">{{value}}</i>
     </div>
 </template>
 
 <script>
     export default {
-        name: "NumberDisplay",
+        name: "PlainDisplay",
         props: {
             value: {
                 type: String,
@@ -15,6 +17,10 @@
             color: {
                 type: String,
                 default: 'black'
+            },
+            heading: {
+                type: String,
+                default: undefined
             }
         }
     }
@@ -22,7 +28,6 @@
 
 <style scoped>
     .wrapper {
-        height: 1.2em;
         overflow: hidden;
         padding: 7px;
         width: 90%;

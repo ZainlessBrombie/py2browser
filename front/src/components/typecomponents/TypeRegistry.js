@@ -50,7 +50,7 @@ export default {
         },
         type: {
             component: PlainDisplay,
-            props: (typeVar) => typeVar ? {value: 'Module: ' + typeVar.data.value, color: 'black'} : {value: 'MISSING'}
+            props: (typeVar) => typeVar ? {value: typeVar.data.value, color: 'black', heading: 'Type'} : {value: 'MISSING'}
         },
         bytes: {
             component: BytesDisplay,
