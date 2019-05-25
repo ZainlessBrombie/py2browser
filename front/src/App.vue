@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <router-view/>
+    <!--suppress HtmlUnknownTag -->
+    <notifications group="alertPopups"></notifications>
   </div>
 </template>
 

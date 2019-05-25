@@ -58,8 +58,6 @@
           // TODO grey out modules and functions
           // TODO option to hide components
           // TODO pickle
-          // TODO empty
-          // TODO error message
           // TODO module support
           return undefined;
         }, variables[path[0]]);
@@ -71,6 +69,33 @@
       selectSubjectively(path) {
         this.path = [...this.path, ...path];
       }
+    },
+    watch: {
+      error() {
+        if (this.error !== '') {
+          this.$notify({
+            group: 'alertPopups',
+            title: 'Error',
+            text: this.error,
+            type: 'error',
+            duration: 600000,
+            max: 2,
+          });
+        } else {
+          this.$notify({
+            group: 'alertPopups',
+            clean: true,
+          });
+          this.$notify({
+            group: 'alertPopups',
+            title: 'Reconnected',
+            text: 'Connection reestablished',
+            type: 'success',
+            duration: 10000,
+            max: 2,
+          });
+        }
+      },
     },
     mounted() {
       this.update();
