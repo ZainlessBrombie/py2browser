@@ -24,18 +24,28 @@ def test():
     a = 'a'
     b = {'a': 2}
     c = [1, 2, {"x": "y"}]
-    mirror(locals())
+    mirror()
 
 
-def mirror(scope):
+def mirror(scope=None, **options):
+    captured_scope = scope
+    if captured_scope is None:
+        frame = inspect.currentframe().f_back
+        captured_scope = {**frame.f_globals, **frame.f_locals}
+
     def run():
-        local_server = server_class.HTTPServer(('localhost', 8081), instance_for(scope))
+        port = 8081
+        if 'port' in options:
+            port = int(options['port'])
+        local_server = server_class.HTTPServer(('localhost', port), instance_for(captured_scope))
         print('Serving on http://localhost:8081')
         local_server.serve_forever(0.1)
     thread = threading.Thread(target=run)
     # thread.setDaemon(True)
     thread.start()
-    pass
+    if 'wait_input' in options and options['wait_input']:
+        print('Press enter to continue')
+        input()
 
 
 def _to_json(value, visited=None):
@@ -183,6 +193,6 @@ def instance_for(scope):
     return HttpHandler
 
 
-mirror(locals())
+test()
 
 

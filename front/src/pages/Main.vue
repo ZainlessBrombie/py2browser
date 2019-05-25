@@ -53,12 +53,14 @@
           }
           if (cur.type === 'map') {
             return typeof p[0] === "number" && cur.data.value[p[0]][p[1]] || undefined;
-          } // TODO dynamic/adjustable content field
+          }
+          // TODO dynamic/adjustable content field
           // TODO search recursively
           // TODO grey out modules and functions
           // TODO option to hide components
           // TODO pickle
-          // TODO module support
+          // TODO pandas support
+          // TODO name in options support
           return undefined;
         }, variables[path[0]]);
       },
