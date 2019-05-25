@@ -9,6 +9,7 @@ import BytesDisplay from "./BytesDisplay";
 import MapDisplay from "./MapDisplay";
 import RecursionDisplay from "./RecursionDisplay";
 import StreamDisplay from "./StreamDisplay";
+import ModuleDisplay from "./ModuleDisplay";
 
 export default {
     obtain(v, path) {
@@ -66,6 +67,10 @@ export default {
         stream: {
             component: StreamDisplay,
             props: (streamVar) => streamVar ? {name: streamVar.data.name, mode: streamVar.data.mode, encoding: streamVar.data.encoding, closed: streamVar.data.closed} : {}
+        },
+        module: {
+            component: ModuleDisplay,
+            props: (modVar) => modVar ? {name: modVar.data.name, moduleToString: modVar.data.to_string} : {}
         }
     }
 }

@@ -60,6 +60,7 @@
           // TODO pickle
           // TODO empty
           // TODO error message
+          // TODO module support
           return undefined;
         }, variables[path[0]]);
       },

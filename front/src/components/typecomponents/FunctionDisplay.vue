@@ -1,24 +1,22 @@
 <template>
     <div class="wrapper">
         {{toStr}}:
-        <table style="border: 1px solid black; border-collapse: collapse; margin-top: 10px">
-            <tr>
-                <td>module</td>
-                <td>file</td>
-                <td>arg count</td>
-            </tr>
-            <tr>
-                <td class="code">{{module}}</td>
-                <td>{{filename}}</td>
-                <td>{{argCount}}</td>
-            </tr>
-        </table>
+        <CustomTable
+                :columns="['module', 'file', 'argCount']"
+                :headings="{module: 'Module', file: 'File', argCount: 'Argument Count'}"
+                :rows="[{module, file: filename, argCount}]"
+                :force-equal-length="true"
+                style="margin-top: 10px;"
+        >
+        </CustomTable>
     </div>
 </template>
 
 <script>
+    import CustomTable from "../table/CustomTable";
     export default {
         name: "FunctionDisplay",
+        components: {CustomTable},
         props: {
             module: {
                 type: String,
