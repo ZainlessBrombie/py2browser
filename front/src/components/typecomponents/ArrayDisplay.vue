@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <b>{{subtypeStringMapping[subtype] || 'Collection'}} {{`<${determineType(value).join(', ')}>`}}</b>
+        <b>{{subtypeStringMapping[subtype] || 'Collection'}} {{value.length ? `<${determineType(value).join(', ')}>` : '(Empty)'}}</b>
         <div class="entry" v-for="(entry, index) in value.slice(0,show)">
             <div style="font-family: 'Lucida Console', Monaco, monospace">&nbsp;{{index}}:&nbsp;</div>
             <div v-if="SimpleToString.eligible(entry)" :style="SimpleToString.toSimpleString(entry).style">
@@ -37,7 +37,8 @@
             TypeRegistry,
             subtypeStringMapping: {
                 list: 'List',
-                set: 'Set'
+                set: 'Set',
+                tuple: 'Tuple'
             },
             show: 50,
         }),

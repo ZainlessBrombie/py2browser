@@ -46,9 +46,13 @@
           if (cur.type === 'collection') {
             return typeof p === 'number' && cur.data.value[p] || undefined;
           }
-          if (cur.type === 'map') { // TODO (tuple). Also: Files
+          if (cur.type === 'map') { // TODO Also: Files
             return typeof p[0] === "number" && cur.data.value[p[0]][p[1]] || undefined;
-          } // TODO dynamic content field
+          } // TODO dynamic/adjustable content field
+          // TODO search recursively
+          // TODO grey out modules and functions
+          // TODO option to hide components
+          // TODO pickle
           return undefined;
         }, variables[path[0]]);
       },

@@ -15,9 +15,7 @@ builtin_names = {'__name__', '__main__', '__doc__', '__package__', '__loader__',
 stuff = "test123sjdbjhvdbfjhvdjvhsjhffff ffffffffffffffffffffffff ffffffffffffffffffvtes t123sjdbjhvdbfjhvdjvhsjhfffffffffffffffffffff fffffffffffffffffffffffffvtest123s jdbjhvdbfjhvdjvhsjhffffffffffffffff ffffffffffffffffffffffffffffffv test123sjdbjhvdbfjhvdjvhsjhfffffffffffffff fffffffffffffffffffffffffffffffvtest123sjdbjhvdbfjhvdjvhsjh ffffffffffffffffffffffffffffffffffffffffffffffv"
 array_example = [1, [2, [3, [4, [5, [6, [7]]]]]]]
 byte_test = b'abckgsnjn'
-multilist_tets = [{'jkdkgfb': {'testvalue': {'still': 'ok', 'this': {'is': 'not', 'wait': {'what': '?'}}}}, 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'}]
-recursion = {'a': {'b': {}}}
-recursion['a']['b'] = recursion['a']
+multilist_tets = [{'other': [], 'working': {'testvalue': {'still': 'ok', 'this': {'is': 'not', 'wait': {'what': '?'}}}}, 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'}]
 
 
 def test():
@@ -50,8 +48,9 @@ def _to_json(value, visited=None):
         return {'type': 'string', 'data': {'value': value}}
     if type(value) is int or type(value) is float:
         return {'type': 'number', 'data': {'value': str(value), 'subtype': ('int' if (type(value) is int) else 'float')}}
-    if type(value) is list or type(value) is set:
-        return {'type': 'collection', 'data': {'subtype': ('list' if (type(value) is list) else 'set'), 'value': list(map(lambda entry: _to_json(entry, visited), list(value)))}}
+    if type(value) in {list, set, tuple}:
+        type_map = {list: 'list', set: 'set', tuple: 'tuple'}
+        return {'type': 'collection', 'data': {'subtype': type_map[type(value)], 'value': list(map(lambda entry: _to_json(entry, visited), list(value)))}}
     if type(value) is Decimal:
         return {'type': 'number', 'data': {'value': str(value), 'subtype': 'decimal'}}
     if value is None:
@@ -59,7 +58,7 @@ def _to_json(value, visited=None):
     if type(value) is bool:
         return {'type': 'boolean', 'data': {'value': str(value)}}
     if type(value) is dict or type(value) is OrderedDict:
-        append = [] # TODO tuple, recusion, hashing
+        append = [] # TODO hashing
         for key in value:
             append.append({
                 'key': _to_json(key, visited),
