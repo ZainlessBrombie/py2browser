@@ -9,7 +9,16 @@ from decimal import Decimal
 import http.server as server_class
 import inspect
 import os
+pd = None
+pd_series_type = None
+pd_data_frame_type = None
 
+try:
+    import pandas as pd
+    pd_series_type = pd.Series
+    pd_data_frame_type = pd.DataFrame
+except ModuleNotFoundError:
+    pass
 
 builtin_names = {'__name__', '__main__', '__doc__', '__package__', '__loader__', '__spec__', '__annotations__', '__builtins__', '__cached__', '__file__'}
 
@@ -22,8 +31,9 @@ n = None
 
 
 def test():
+    series = pd.Series(['entry '+str(x) for x in range(0,100)])
     a = 'a'
-    b = {'a': 2}
+    b = {'a': 2, 's': series}
     c = [1, 2, {"x": "y"}]
     mirror(wait_input=True)
 
@@ -65,7 +75,14 @@ def _to_json(value, visited=None):
         return {'type': 'number', 'id': id(value), 'data': {'value': str(value), 'subtype': ('int' if (type(value) is int) else 'float')}}
     if type(value) in {list, set, tuple}:
         type_map = {list: 'list', set: 'set', tuple: 'tuple'}
-        return {'type': 'collection', 'id': id(value), 'data': {'subtype': type_map[type(value)], 'value': list(map(lambda entry: _to_json(entry, visited), list(value)))}}
+        return {'type': 'collection',
+                'id': id(value),
+                'data': {
+                    'subtype': type_map[type(value)],
+                    'value': list(map(lambda entry: _to_json(entry, visited), list(value)))}}
+    if type(value) is pd_series_type:
+        return {'type': 'pandas_series', 'id': id(value), 'data':
+            {'value': list(map(lambda entry: _to_json(entry, visited), list(value[:1000]))), 'dtype': str(value.dtype), 'full_length': len(value)}}
     if type(value) is Decimal:
         return {'type': 'number', 'id': id(value), 'data': {'value': str(value), 'subtype': 'decimal'}}
     if value is None:
@@ -197,5 +214,4 @@ def instance_for(scope):
 
 
 test()
-
 

@@ -47,7 +47,7 @@
       clicked(varname) {
         this.$emit('varSelected', varname);
       },
-      isStandardType: t => ['string', 'number', 'collection', 'map', 'datetime', 'boolean', 'stream', 'bytes', 'none'].includes(t)
+      isStandardType: t => ['string', 'number', 'collection', 'map', 'datetime', 'boolean', 'stream', 'bytes', 'none', 'pandas_series'].includes(t)
     }
   }
 </script>

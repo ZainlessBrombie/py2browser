@@ -10,6 +10,7 @@ import MapDisplay from "./MapDisplay";
 import RecursionDisplay from "./RecursionDisplay";
 import StreamDisplay from "./StreamDisplay";
 import ModuleDisplay from "./ModuleDisplay";
+import PandasSeriesDisplay from "./PandasSeriesDisplay";
 
 export default {
     obtain(v, path) {
@@ -75,6 +76,10 @@ export default {
         none: {
             component: PlainDisplay,
             props: () => ({value: 'None', color: 'purple'})
+        },
+        pandas_series: {
+            component: PandasSeriesDisplay,
+            props: (seriesVar) => seriesVar ? {length: seriesVar.data.full_length, id: seriesVar.id, head: seriesVar.data.value, dType: seriesVar.data.dtype} : {}
         }
     }
 }
