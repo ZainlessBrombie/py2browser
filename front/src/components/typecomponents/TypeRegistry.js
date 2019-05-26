@@ -71,6 +71,10 @@ export default {
         module: {
             component: ModuleDisplay,
             props: (modVar) => modVar ? {name: modVar.data.name, moduleToString: modVar.data.to_string} : {}
+        },
+        none: {
+            component: PlainDisplay,
+            props: () => ({value: 'None', color: 'purple'})
         }
     }
 }

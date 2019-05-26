@@ -39,14 +39,15 @@
         collection: 'grey',
         map: 'brown',
         stream: 'lightblue',
-        bytes: 'pink'
+        bytes: 'pink',
+        none: 'deeppink'
       }
     }),
     methods: {
       clicked(varname) {
         this.$emit('varSelected', varname);
       },
-      isStandardType: t => ['string', 'number', 'collection', 'map', 'datetime', 'boolean', 'stream', 'bytes'].includes(t)
+      isStandardType: t => ['string', 'number', 'collection', 'map', 'datetime', 'boolean', 'stream', 'bytes', 'none'].includes(t)
     }
   }
 </script>

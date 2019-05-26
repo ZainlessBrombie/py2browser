@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <b v-if="heading">{{heading}}</b>
-        <br>
+        <br v-if="heading">
         &nbsp;<i class="code" :style="{color}">{{value}}</i>
     </div>
 </template>

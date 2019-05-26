@@ -18,13 +18,14 @@ array_example = [1, [2, [3, [4, [5, [6, [7]]]]]]]
 byte_test = b'abckgsnjn'
 multilist_tets = [{'other': [], 'working': {'testvalue': {'still': 'ok', 'this': {'is': 'not', 'wait': {'what': '?'}}}}, 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'},{'jkdkgfb': 'dgfjh', 'dofj': 'gdfj'}]
 f = open('/home/mathis/examples.desktop')
+n = None
 
 
 def test():
     a = 'a'
     b = {'a': 2}
     c = [1, 2, {"x": "y"}]
-    mirror()
+    mirror(wait_input=True)
 
 
 def mirror(scope=None, **options):
@@ -41,7 +42,7 @@ def mirror(scope=None, **options):
         print('Serving on http://localhost:8081')
         local_server.serve_forever(0.1)
     thread = threading.Thread(target=run)
-    # thread.setDaemon(True)
+    thread.setDaemon(True)
     thread.start()
     if 'wait_input' in options and options['wait_input']:
         print('Press enter to continue')
@@ -54,21 +55,23 @@ def _to_json(value, visited=None):
     else:
         visited = [*visited]
     if id(value) in visited:
-        return {'type': 'recursion', 'data': {'value': -(len(visited) - visited.index(id(value)))}}
+        return {'type': 'recursion', 'id': id(value), 'data': {'value': -(len(visited) - visited.index(id(value)))}}
     visited.append(id(value))
+    if value is None:
+        return {'type': 'none', 'data': {}, 'id': 0}
     if type(value) is str:
-        return {'type': 'string', 'data': {'value': value}}
+        return {'type': 'string', 'id': id(value), 'data': {'value': value}}
     if type(value) is int or type(value) is float:
-        return {'type': 'number', 'data': {'value': str(value), 'subtype': ('int' if (type(value) is int) else 'float')}}
+        return {'type': 'number', 'id': id(value), 'data': {'value': str(value), 'subtype': ('int' if (type(value) is int) else 'float')}}
     if type(value) in {list, set, tuple}:
         type_map = {list: 'list', set: 'set', tuple: 'tuple'}
-        return {'type': 'collection', 'data': {'subtype': type_map[type(value)], 'value': list(map(lambda entry: _to_json(entry, visited), list(value)))}}
+        return {'type': 'collection', 'id': id(value), 'data': {'subtype': type_map[type(value)], 'value': list(map(lambda entry: _to_json(entry, visited), list(value)))}}
     if type(value) is Decimal:
-        return {'type': 'number', 'data': {'value': str(value), 'subtype': 'decimal'}}
+        return {'type': 'number', 'id': id(value), 'data': {'value': str(value), 'subtype': 'decimal'}}
     if value is None:
-        return {'type': 'number', 'data': {}}
+        return {'type': 'number', 'id': id(value), 'data': {}}
     if type(value) is bool:
-        return {'type': 'boolean', 'data': {'value': str(value)}}
+        return {'type': 'boolean', 'id': id(value), 'data': {'value': str(value)}}
     if type(value) is dict or type(value) is OrderedDict:
         append = []
         for key in value:
@@ -76,26 +79,26 @@ def _to_json(value, visited=None):
                 'key': _to_json(key, visited),
                 'value': _to_json(value[key], visited)
             })
-        return {'type': 'map', 'data': {'subtype': ('dict' if (type(value) is dict) else 'ordered_dict'), 'value': append}}
+        return {'type': 'map', 'id': id(value), 'data': {'subtype': ('dict' if (type(value) is dict) else 'ordered_dict'), 'value': append}}
     if type(value) is type:
-        return {'type': 'type', 'data': {'value': str(value)[slice(len('<class \''), -len('\'>'))]}}
+        return {'type': 'type', 'id': id(value), 'data': {'value': str(value)[slice(len('<class \''), -len('\'>'))]}}
     if str(type(value)) == '<class \'function\'>':
-        return {'type': 'function', 'data': {'to_string': str(value), 'module': str(value.__module__), 'filename': str(value.__code__.co_filename), 'arg_count': int(value.__code__.co_argcount)}}
+        return {'type': 'function', 'id': id(value), 'data': {'to_string': str(value), 'module': str(value.__module__), 'filename': str(value.__code__.co_filename), 'arg_count': int(value.__code__.co_argcount)}}
     if type(value) is datetime.date:
-        return {'type': 'datetime', 'data': {'value': value.isoformat(), 'zoned': False, 'subtype': 'date'}}
+        return {'type': 'datetime', 'id': id(value), 'data': {'value': value.isoformat(), 'zoned': False, 'subtype': 'date'}}
     if type(value) is datetime.time:
-        return {'type': 'datetime', 'data': {'value': value.isoformat(), 'zoned': False, 'subtype': 'time'}}
+        return {'type': 'datetime', 'id': id(value), 'data': {'value': value.isoformat(), 'zoned': False, 'subtype': 'time'}}
     if type(value) is datetime.datetime:
-        return {'type': 'datetime', 'data': {'value': value.isoformat(), 'zoned': False, 'subtype': 'datetime'}}
+        return {'type': 'datetime', 'id': id(value), 'data': {'value': value.isoformat(), 'zoned': False, 'subtype': 'datetime'}}
     if str(type(value)) == '<class \'module\'>':
-        return {'type': 'module', 'data': {'to_string': str(value), 'name': value.__name__}}
+        return {'type': 'module', 'id': id(value), 'data': {'to_string': str(value), 'name': value.__name__}}
     if type(value) is bytes:
-        return {'type': 'bytes', 'data': {'value': base64.b64encode(value).decode('utf-8'), 'len': len(value)}}
+        return {'type': 'bytes', 'id': id(value), 'data': {'value': base64.b64encode(value).decode('utf-8'), 'len': len(value)}}
     import _io
     if type(value) is _io.TextIOWrapper:
-        return {'type': 'stream', 'data': {'name': value.name, 'mode': value.mode, 'encoding': value.encoding, 'closed': value.closed}}
+        return {'type': 'stream', 'id': id(value), 'data': {'name': value.name, 'mode': value.mode, 'encoding': value.encoding, 'closed': value.closed}}
 
-    return {'type': 'unsupported', 'data': {'type': str(type(value)), 'to_string': str(value)}}
+    return {'type': 'unsupported', 'id': id(value), 'data': {'type': str(type(value)), 'to_string': str(value)}}
 
 
 def instance_for(scope):

@@ -56,7 +56,6 @@
           }
           // TODO dynamic/adjustable content field
           // TODO search recursively
-          // TODO grey out modules and functions; order
           // TODO option to hide components
           // TODO pickle
           // TODO pandas support
