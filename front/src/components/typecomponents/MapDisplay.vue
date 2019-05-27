@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <b>{{subtypeStringMapping[subtype] || 'Map'}}
-            {{value.length ? `<${determineKeyTypes(value)},${determineEntryTypes(value)}>` : '(empty)'}}</b>
+            {{value.length ? `<${determineKeyTypes(value)};${determineEntryTypes(value)}>` : '(empty)'}}</b>
         <CustomTable class="table" :columns="header" :rows="entries" :headings="tableOptions.headings">
             <div slot="keyValue" slot-scope="locals">
                 <div v-if="locals.row.keyString" :style="locals.row.keyStyle">{{locals.row.keyString}}</div>
