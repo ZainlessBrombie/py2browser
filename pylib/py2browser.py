@@ -59,7 +59,30 @@ def mirror(scope=None, **options):
         input()
 
 
-def _to_json(value, visited=None):
+class _CachingToJson:
+    cache = {}
+
+    def to_json(self, value):
+        new_cache = {}
+        _to_json(value, None, new_cache)
+        self.cache = new_cache
+
+    def re_obtain(self, object_id):
+        if object_id in self.cache:
+            return self.cache[object_id]
+        return None
+
+    def get_range(self, object_id, start, end):
+        if object_id not in self.cache:
+            return None
+        o = self.cache[object_id]
+        if type(o) is pd_series_type:
+            pass # TODO
+
+
+def _to_json(value, visited=None, id_map=None):
+    if id_map is not None and value is not None:
+        id_map[id(value)] = value
     if visited is None:
         visited = []
     else:
@@ -79,10 +102,10 @@ def _to_json(value, visited=None):
                 'id': id(value),
                 'data': {
                     'subtype': type_map[type(value)],
-                    'value': list(map(lambda entry: _to_json(entry, visited), list(value)))}}
+                    'value': list(map(lambda entry: _to_json(entry, visited, id_map), list(value)))}}
     if type(value) is pd_series_type:
         return {'type': 'pandas_series', 'id': id(value), 'data':
-            {'value': list(map(lambda entry: _to_json(entry, visited), list(value[:1000]))), 'dtype': str(value.dtype), 'full_length': len(value)}}
+            {'value': list(map(lambda entry: _to_json(entry, visited, id_map), list(value[:1000]))), 'dtype': str(value.dtype), 'full_length': len(value)}}
     if type(value) is Decimal:
         return {'type': 'number', 'id': id(value), 'data': {'value': str(value), 'subtype': 'decimal'}}
     if value is None:
@@ -93,8 +116,8 @@ def _to_json(value, visited=None):
         append = []
         for key in value:
             append.append({
-                'key': _to_json(key, visited),
-                'value': _to_json(value[key], visited)
+                'key': _to_json(key, visited, id_map),
+                'value': _to_json(value[key], visited, id_map)
             })
         return {'type': 'map', 'id': id(value), 'data': {'subtype': ('dict' if (type(value) is dict) else 'ordered_dict'), 'value': append}}
     if type(value) is type:
